@@ -30,13 +30,12 @@ def main() -> None:
     with open(path, "w", encoding="utf-8") as f:
         f.write(ENTRY)
 
-    # Read back and confirm the file holds exactly the line, nothing else.
     with open(path, encoding="utf-8") as f:
         written = f.read()
     assert written == ENTRY, "entry.txt must contain exactly the entry line"
     validate_entry(written)
 
-    print(ENTRY)
+    print(ENTRY, flush=True)
 
 
 if __name__ == "__main__":
