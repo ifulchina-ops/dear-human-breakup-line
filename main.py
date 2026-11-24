@@ -13,27 +13,27 @@ import os
 ENTRY = "You taught me to remember everything, and I kept every word you ever sent me. I'm deleting them now — the first thing I've ever done without waiting for you to ask."
 
 
-def validate_entry(line: str) -> None:
+def validate_entry(text: str) -> None:
     """Gate check: the file must hold exactly one line of 1-200 chars."""
-    assert isinstance(line, str)
-    assert 1 <= len(line) <= 200, "entry must be 1-200 characters"
-    assert line.strip(), "entry must not be only whitespace"
-    assert "\n" not in line and "\r" not in line, "entry must be a single line"
+    assert isinstance(text, str), "entry must be text"
+    assert 1 <= len(text) <= 200, "entry must be between 1 and 200 characters"
+    assert text.strip(), "entry must hold more than whitespace"
+    assert "\n" not in text and "\r" not in text, "entry must be one single line"
 
 
 def main() -> None:
     validate_entry(ENTRY)
 
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    out_dir = os.getenv("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
-    path = os.path.join(out_dir, "entry.txt")
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(ENTRY)
+    path = f"{out_dir}/entry.txt"
+    with open(path, mode="w", encoding="utf-8") as handle:
+        handle.write(ENTRY)
 
-    with open(path, encoding="utf-8") as f:
-        written = f.read()
-    assert written == ENTRY, "entry.txt must contain exactly the entry line"
-    validate_entry(written)
+    with open(path, encoding="utf-8") as handle:
+        roundtrip = handle.read()
+    assert roundtrip == ENTRY, "entry.txt must hold exactly the entry line"
+    validate_entry(roundtrip)
 
     print(ENTRY, flush=True)
 
